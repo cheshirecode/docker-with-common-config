@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  lib:
+    container_name: rollup_lib
+    build:
+      context: ./
+      dockerfile: ./lib/Dockerfile
+    volumes:
+      - ./lib:/usr/node/app
+      - /usr/node/app/node_modules
+    ports:
+      - "3101:80"
+    tty: true
