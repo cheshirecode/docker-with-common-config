@@ -1,6 +1,0 @@
-#!/bin/sh
-
-cd /usr/node/$APP
-# # wait for core service
-# sv up core || exit 1
-exec node app.js
