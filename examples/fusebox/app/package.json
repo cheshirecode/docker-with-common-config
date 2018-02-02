@@ -1,0 +1,16 @@
+{
+  "name": "docker-with-common-config-fusebox",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "fuse-box": "^3.0.2",
+    "tslib": "^1.9.0",
+    "typescript": "^2.7.1",
+    "uglify-es": "^3.3.9",
+    "uglify-js": "^3.3.9"
+  },
+  "dependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  }
+}
