@@ -1,0 +1,38 @@
+{
+  "name": "monorepo-container",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "fuse-box": "^3.0.2",
+    "tslib": "^1.9.0",
+    "typescript": "^2.7.1",
+    "uglify-es": "^3.3.9",
+    "uglify-js": "^3.3.9",
+    "babel-core": "^6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "rollup": "^0.55.1",
+    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-commonjs": "^8.3.0",
+    "rollup-plugin-filesize": "^1.5.0",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-resolve": "^3.0.2"
+  },
+  "dependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  },
+  "scripts": {
+    ":monorepo-lib": "cd packages/node_modules/monorepo-lib;",
+    ":monorepo-app": "cd packages/node_modules/monorepo-app;",
+    "app:build": "yarn run :monorepo-app node fuse.js dist",
+    "app:dev": "yarn run :monorepo-app node fuse.js",
+    "lib:build": "yarn run :monorepo-lib rollup -c",
+    "lib:dev": "yarn run :monorepo-lib rollup -c -w",
+    "lib:test": "yarn run :monorepo-lib node test/test.js",
+    "lib:pretest": "yarn run lib:build",
+    "start": "yarn run lib:build && yarn run app:dev"
+  }
+}
