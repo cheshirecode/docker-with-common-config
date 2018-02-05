@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd /usr/node/$APP;
+source /etc/envvars;
+exec yarn run lib:dev;

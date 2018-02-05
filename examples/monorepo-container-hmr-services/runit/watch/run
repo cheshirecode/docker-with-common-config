@@ -1,0 +1,11 @@
+#!/bin/sh
+
+sv up app || exit 1;
+source /etc/envvars;
+cd /usr/node/$APP/packages/node_modules/monorepo-lib;
+exec inotifywait -m -r -e moved_to -e close_write --format "%e %w%f" cd dist/index.cjs.js |
+  while read evt dir file; do
+    # echo "Event: $evt, Dir: $dir, File: $file"
+    # echo "Fullpath: $dir $file" #note the space between $dir and $file
+    sv restart app
+done

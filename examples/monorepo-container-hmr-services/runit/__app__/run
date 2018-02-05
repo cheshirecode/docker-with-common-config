@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# wait for core service
+sv up lib || exit 1
+#harakiri before one can be reborn
+source /etc/envvars;
+kill `netstat -nlp | grep $APP_PORT | awk '{print $7}' | awk -F/ '{print $1}'`
+cd /usr/node/$APP;
+exec yarn run app:dev;
