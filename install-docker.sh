@@ -1,7 +1,6 @@
 #!/bin/bash
 
 sudo apt-get remove docker docker-engine docker.io;
-sudo apt-get update;
 sudo apt-get install \
     apt-transport-https \
     ca-certificates \
@@ -12,4 +11,5 @@ sudo add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
    $(lsb_release -cs) \
    stable";
-sudo apt-get install docker-ce=17.12.0~ce-0~ubuntu
+sudo apt-get update;
+sudo apt-get install -y docker-ce=17.12.0~ce-0~ubuntu
