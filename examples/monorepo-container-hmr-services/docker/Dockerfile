@@ -5,7 +5,7 @@ ARG APP
 ENV APP $APP
 ARG APP_PORT
 ENV APP_PORT $APP_PORT
-RUN apk add --update --no-cache runit inotify-tools && \
+RUN apk add --no-cache runit inotify-tools && \
   mkdir -p /usr/node/$APP && \
   chown -R node:node /usr/node/
 

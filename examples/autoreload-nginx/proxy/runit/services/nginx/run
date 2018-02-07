@@ -1,0 +1,3 @@
+#!/bin/sh
+source /etc/envvars;
+nginx -g 'daemon off;'

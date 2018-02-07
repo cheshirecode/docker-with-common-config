@@ -1,0 +1,21 @@
+version: '3.3'
+services:
+  proxy:
+    container_name: autoreload-nginx-proxy
+    build:
+      context: ./proxy
+    volumes:
+      - ./proxy/config:/etc/nginx
+    ports:
+      - "3100:80"
+    tty: true
+    restart: unless-stopped
+  app:
+    container_name: autoreload-nginx-app
+    build:
+      context: ./app
+    volumes:
+      - ./app:/usr/node/app
+      - /usr/node/app/.next
+      - /usr/node/app/node_modules
+    restart: unless-stopped

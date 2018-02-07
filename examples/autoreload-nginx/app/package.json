@@ -1,0 +1,10 @@
+{
+  "license": "UNLICENSED",
+  "main": "index.js",
+  "scripts": {
+    "start": "micro -p 8080"
+  },
+  "dependencies": {
+    "micro": "^9.1.0"
+  }
+}

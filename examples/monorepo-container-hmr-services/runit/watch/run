@@ -3,9 +3,11 @@
 sv up app || exit 1;
 source /etc/envvars;
 cd /usr/node/$APP/packages/node_modules/monorepo-lib;
-exec inotifywait -m -r -e moved_to -e close_write --format "%e %w%f" dist/index.cjs.js |
+kill `cat /etc/.kill_pid`;
+inotifywait -m -r -e moved_to -e close_write -e attrib --format "%e %w%f" dist/index.cjs.js |
   while read evt dir file; do
-    # echo "Event: $evt, Dir: $dir, File: $file"
-    # echo "Fullpath: $dir $file" #note the space between $dir and $file
-    sv restart app
-done
+      # echo "Event: $evt, Dir: $dir, File: $file"
+      # echo "Fullpath: $dir $file" #note the space between $dir and $file
+      sv restart app
+  done
+echo $! > /etc/.kill_pid;

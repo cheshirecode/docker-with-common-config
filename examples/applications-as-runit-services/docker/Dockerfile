@@ -4,7 +4,7 @@ FROM node:8.9.3-alpine
 ARG APP
 ENV APP $APP
 ARG APP_PORT
-RUN apk add --update --no-cache runit && \
+RUN apk add --no-cache runit && \
   mkdir -p /usr/node/ && \
   chown -R node:node /usr/node/
 
