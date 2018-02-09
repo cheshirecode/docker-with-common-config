@@ -1,11 +1,10 @@
 #!/bin/sh
 source /etc/envvars;
-kill `cat /var/tmp/.kill_pid`;
+kill `ps -ef | grep 'inotifywait -m -e moved_to -e moved_from -e close_write -e modify -e attrib --format %e %w%f /etc/nginx' | awk '{print $1}'`;
 exec inotifywait -m -e moved_to -e moved_from -e close_write -e modify -e attrib --format "%e %w%f" /etc/nginx/ |
   while read evt dir file; do
     echo "Event: $evt, Dir: $dir, File: $file"
     # echo "Fullpath: $dir $file" #note the space between $dir and $file
     # echo "Reloading nginx if configuration is valid.";
     nginx -t || nginx -s reload
-done
-ps -ef | grep 'inotifywait -m' | awk '{print $1}' > /var/tmp/.kill_pid;
+  done
