@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   proxy:
-    container_name: autoreload-nginx-proxy
+    container_name: docker-with-common-config_autoreload-nginx-proxy
     build:
       context: ./proxy
     volumes:
@@ -11,7 +11,7 @@ services:
     tty: true
     restart: unless-stopped
   app:
-    container_name: autoreload-nginx-app
+    container_name: docker-with-common-config_autoreload-nginx-app
     build:
       context: ./app
     volumes:

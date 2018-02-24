@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  app:
+    container_name: docker-with-common-config_develop-with-yarn-cache
+    build:
+      context: ./
+      dockerfile: ./app/Dockerfile
+    volumes:
+      - ./app:/usr/node/app
+      - /usr/node/app/node_modules/
+      - ${YARN_CACHE_DIR}:/usr/local/share/.cache/yarn/v1
+    ports:
+      - "3102:3100"

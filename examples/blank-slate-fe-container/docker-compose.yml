@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   app:
-    container_name: blank_fe_app
+    container_name: docker-with-common-config_blank_fe_app
     build:
       context: ./
       dockerfile: ./app/Dockerfile

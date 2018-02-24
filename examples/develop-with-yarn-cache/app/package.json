@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@sindresorhus/is": "latest"
+  }
+}
