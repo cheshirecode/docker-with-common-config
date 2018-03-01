@@ -9,7 +9,9 @@ This provides building blocks with Docker:
 
 # Links
 
-[Volume sync fix for Windows](https://github.com/hackersatcambridge/hac-website#notes-on-using-windows)
+[Volume sync fix 1 for Windows](https://github.com/hackersatcambridge/hac-website#notes-on-using-windows)
+
+[Volume sync fix 2 for Windows](https://github.com/EugenMayer/docker-sync/wiki/docker-sync-on-Windows)
 
 [Security harderning](https://github.com/nimmis/docker-alpine-micro)
 

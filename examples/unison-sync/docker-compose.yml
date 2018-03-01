@@ -1,0 +1,15 @@
+version: '3.3'
+services:
+  app:
+    container_name: docker-with-common-config_unison-sync
+    build:
+      context: ./
+      dockerfile: ./app/Dockerfile
+    volumes:
+      - app-sync:/usr/node/app:nocopy
+      - /usr/node/app/node_modules
+    ports:
+      - "3102:3100"
+volumes:
+  app-sync:
+    external: true

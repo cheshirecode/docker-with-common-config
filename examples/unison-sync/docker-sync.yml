@@ -1,0 +1,11 @@
+version: "2"
+options:
+  verbose: true
+syncs:
+  app-sync:
+    sync_args: ['-perms=0']
+    sync_strategy: 'unison'
+    sync_host_ip: '127.0.0.1'
+    sync_excludes: ['.gitignore','.git/*', '.*/node_modules/', '.*/.next']
+    src: './app'
+    watch_excludes: ['.*/.git', '.*/node_modules/', '.gitignore', '.*/.next']
