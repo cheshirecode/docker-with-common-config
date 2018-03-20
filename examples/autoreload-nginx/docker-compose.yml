@@ -7,15 +7,15 @@ services:
     volumes:
       - ./proxy/config:/etc/nginx
     ports:
-      - "3100:80"
+      - "80:80"
     tty: true
     restart: unless-stopped
-  app:
-    container_name: docker-with-common-config_autoreload-nginx-app
-    build:
-      context: ./app
-    volumes:
-      - ./app:/usr/node/app
-      - /usr/node/app/.next
-      - /usr/node/app/node_modules
-    restart: unless-stopped
+  # app:
+  #   container_name: docker-with-common-config_autoreload-nginx-app
+  #   build:
+  #     context: ./app
+  #   volumes:
+  #     - ./app:/usr/node/app
+  #     - /usr/node/app/.next
+  #     - /usr/node/app/node_modules
+  #   restart: unless-stopped

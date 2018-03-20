@@ -1,10 +1,7 @@
-FROM nginx:alpine
+FROM cheshirecode/alpine-runit:nginx
 
 # Initial
-RUN apk add --no-cache openntpd curl runit inotify-tools
-RUN sh -c "nohup ntpd -d -f /etc/ntpd.conf -s > /dev/null 2>&1 &" && \
-  addgroup -g 1000 -S www-data && adduser -u 1000 -D -S -G www-data www-data && \
-  rm -rf /var/cache/apk/*
+RUN addgroup -g 1000 -S www-data && adduser -u 1000 -D -S -G www-data www-data
 HEALTHCHECK --interval=5s --timeout=5s CMD curl --silent --fail -A "Docker-Healthcheck" http://localhost || exit 1
 
 # Setup
