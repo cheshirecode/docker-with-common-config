@@ -3,3 +3,4 @@
 **/.fusebox
 **/.dist
 **/dist
+.DS_Store
