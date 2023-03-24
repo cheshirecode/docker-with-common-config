@@ -1,0 +1,143 @@
+# daemon off;
+error_log  ${NGINX_LOGS}/error.log;
+error_log  ${NGINX_LOGS}/error.log  notice;
+error_log  ${NGINX_LOGS}/error.log  info;
+pid    ${NGINX_LOGS}/nginx.pid;
+
+# workers
+worker_processes  4;
+worker_rlimit_nofile 8192;
+events {
+  use epoll;
+  worker_connections 1024;
+  multi_accept on;
+}
+
+http {
+  resolver 127.0.0.1 1.1.1.1 8.8.8.8  valid=1s;
+  include  ${NGINX_CONFIGS}/mime.types;
+  include  ${NGINX_CONFIGS}/proxy.conf;
+  index  index.html index.htm index.php;
+  default_type  application/octet-stream;
+
+  log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+           '$status $body_bytes_sent "$http_referer" '
+           '"$http_user_agent" "$http_x_forwarded_for"';
+
+  access_log  ${NGINX_LOGS}/access.log  main buffer=16k;
+
+  disable_symlinks off;  
+  server_names_hash_bucket_size 256;  ## k8s default
+  server_tokens off;
+
+  # compression
+  gzip on;
+  gzip_http_version 1.1;
+  proxy_hide_header 'Vary';
+  gzip_vary on;
+  gzip_comp_level 5;
+  gzip_min_length 1024;
+  gzip_proxied expired no-cache no-store private auth;
+  gzip_buffers 16 8k;
+  gzip_types text/plain application/xml application/json application/x-javascript text/css image/svg image/x-icon;
+
+  # buffer + timeouts
+  sendfile on;
+  tcp_nopush on;
+  send_timeout 10;
+  client_max_body_size  10m;
+  client_body_buffer_size 128k;
+  client_header_buffer_size 8k;
+  large_client_header_buffers 4 32k;
+  client_body_timeout 12;
+  client_header_timeout 12;
+  keepalive_requests 100000;
+  keepalive_timeout 65;
+
+  map $sent_http_content_type $expires {
+    default          off;
+    text/html          epoch;
+    text/css           max;
+    application/javascript   max;
+    application/x-javascript   max;
+    ~image/          max;
+  }
+
+  charset UTF-8;
+  root   /var/www/html/;
+
+  server {
+    listen 80;
+    server_name  localhost $hostname ${NGINX_SERVER_ROOT_HOST};
+    # include  ${NGINX_CONFIGS}/harden.lconf;
+
+    location / {
+      root   ${NGINX_LOCATIONS_ROOT};
+      try_files $uri $uri/ /index.html;    
+      expires $expires;
+    }
+
+    location /api {
+      proxy_pass http://localhost/api/;
+    }
+
+    location /api/ {
+      proxy_buffering off;
+      # do not pass the CORS header from proxied backend
+      proxy_hide_header 'Access-Control-Allow-Credentials';      
+      proxy_hide_header 'Access-Control-Allow-Origin';
+      include  ${NGINX_CONFIGS}/nocache.lconf;
+      include  ${NGINX_CONFIGS}/cors.lconf;
+
+      if ($request_method = OPTIONS ) {
+        expires off;
+        include  ${NGINX_CONFIGS}/cors.lconf;
+        add_header Content-Length 0 always;
+        add_header Content-Type text/plain always;
+        return 204;
+      }
+      # rewrite ^/api/(.*)$ ${NGINX_LOCATIONS_API_PROXY}/$1 redirect;
+      proxy_pass ${NGINX_LOCATIONS_API_PROXY}/;
+      add_header X-Proxy-Pass ${NGINX_LOCATIONS_API_PROXY};
+    }
+
+    location = /healthcheck {
+      proxy_buffering off;
+      include  ${NGINX_CONFIGS}/nocache.lconf;
+
+      default_type text/plain;
+
+      return 200 "OK";
+    }
+
+    location ^~ /lhci {
+      proxy_pass http://uat.ui.legion.site.gs.com/lhci/;
+    }
+  }
+
+  server {
+    listen ${NGINX_SERVER_ROOT_PORT};
+    server_name  _;
+
+    location / {
+      proxy_pass http://localhost/;
+    }
+  }
+
+  server {
+    listen 443 ssl http2;
+    server_name  _;
+    ssl_certificate ${NGINX_SSL_CERTIFICATE};
+    ssl_certificate_key ${NGINX_SSL_CERTIFICATE_KEY};
+    ssl_session_tickets off;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers ECDH+AESGCM:ECDH+AES256:ECDH+AES128:DHE+AES128:!ADH:!AECDH:!MD5;
+    ssl_session_cache shared:SSL:20m;
+    ssl_session_timeout 180m;
+
+    location / {
+      proxy_pass http://localhost/;
+    }
+  }
+}
